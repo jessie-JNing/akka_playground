@@ -1,7 +1,6 @@
 package org.akka.essentials.wc.mapreduce.example.server;
 
 import java.util.*;
-import java.util.concurrent.*;
 
 import akka.actor.*;
 import akka.event.*;
@@ -23,7 +22,7 @@ public class ReduceActor extends UntypedActor {
 			List<Result> work = (List<Result>) message;
 
 			// perform the work
-			NavigableMap<String, Integer> reducedList = reduce(work);
+			SortedMap<String, Integer> reducedList = reduce(work);
 
 			// reply with the result
 			aggregateActor.tell(reducedList, getSelf());
@@ -32,8 +31,8 @@ public class ReduceActor extends UntypedActor {
 			throw new IllegalArgumentException("Unknown message [" + message + "]");
 	}
 
-	private NavigableMap<String, Integer> reduce(List<Result> list) {
-		NavigableMap<String, Integer> reducedMap = new ConcurrentSkipListMap<String, Integer>();
+	private SortedMap<String, Integer> reduce(List<Result> list) {
+		SortedMap<String, Integer> reducedMap = new TreeMap<String, Integer>();
 
 		Iterator<Result> iter = list.iterator();
 		while (iter.hasNext()) {
